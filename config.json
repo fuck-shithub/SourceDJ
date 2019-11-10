@@ -1,0 +1,11 @@
+{
+    "logfile": "test.txt",
+    "chat_command_prefix": ".",
+    "youtube_dl_options": {"format": "bestaudio/best"},
+    "output_device": 9,
+    "loopback": true,
+    "loopback_input_device": 2,
+    "loopback_output_device": 8,
+    "loopback_channels": 2,
+    "loopback_rate": 44100
+}
