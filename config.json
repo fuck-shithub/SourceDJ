@@ -1,7 +1,7 @@
 {
     "logfile": "test.txt",
     "chat_command_prefix": ".",
-    "youtube_dl_options": {"format": "bestaudio/best"},
+    "youtube_dl_options": {"format": "bestaudio/best", "outtmpl": "youtube_dl"},
     "output_device": 9,
     "loopback": true,
     "loopback_input_device": 2,
