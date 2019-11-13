@@ -4,14 +4,10 @@ import json
 import gtts
 import pyaudio
 import youtube_dl
-import numpy as np
 import subprocess
 import wave
 import io
 import os
-import urllib.request
-import urllib.parse
-import re
 
 try:
     with open("config.json") as f:
