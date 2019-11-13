@@ -3,9 +3,15 @@ import log_parser
 import json
 import gtts
 import pyaudio
+import youtube_dl
+import numpy as np
 import subprocess
 import wave
 import io
+import os
+import urllib.request
+import urllib.parse
+import re
 
 try:
     with open("config.json") as f:
@@ -35,35 +41,40 @@ if config["loopback"]:
     loopback_stream.start_stream()
 
 
-tts_stream = None
+@logparser.chat_command
+def tts(event):
+    print(event.author, "->", event.command, event.args)
+    gtts.gTTS(event.args).save("tts.mp3")
+    play_from_ffmpeg("tts.mp3")
 
 
 @logparser.chat_command
-def tts(event):
-    tts_play(event.args)
-
+def play(event):
     print(event.author, "->", event.command, event.args)
+    ydl = youtube_dl.YoutubeDL(config["youtube_dl_options"])
+    with ydl:
+        video_info = ydl.extract_info(event.args, download=True)
+        filename = os.path.join("youtube-dl", video_info["entries"][0]["id"])
+
+    play_from_ffmpeg(filename)
 
 
-def tts_play(text):
-    gtts.gTTS(text).save("tts.mp3")
+def play_from_ffmpeg(file):
+    audio = subprocess.Popen("ffmpeg -i " + file + " -loglevel panic -vn -f wav -c:a pcm_s16le pipe:1",
+                             stdout=subprocess.PIPE)
 
-    tts_audio = subprocess.Popen("ffmpeg -i tts.mp3 -loglevel panic -vn -f wav -c:a pcm_s16le pipe:1",
-                                 stdout=subprocess.PIPE)
+    wf = wave.open(io.BytesIO(audio.stdout.read()))
 
-    wf = wave.open(io.BytesIO(tts_audio.stdout.read()))
-
-    def tts_callback(in_data, frame_count, time_info, status):
+    def callback(in_data, frame_count, time_info, status):
         data = wf.readframes(frame_count)
         return data, pyaudio.paContinue
 
-    global tts_stream
-    tts_stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                        channels=wf.getnchannels(),
-                        rate=wf.getframerate(),
-                        output=True,
-                        stream_callback=tts_callback,
-                        output_device_index=config["output_device"])
+    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                    channels=wf.getnchannels(),
+                    rate=wf.getframerate(),
+                    output=True,
+                    stream_callback=callback,
+                    output_device_index=config["output_device"])
 
 
 logparser.start()
