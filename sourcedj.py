@@ -19,8 +19,6 @@ try:
 except FileNotFoundError:
     print("Config missing.")
 
-play_regex = re.compile(r"(youtu\.be)|(youtube\.com)")
-
 loglistener = log_listener.LogListener(config["logfile"])
 logparser = log_parser.LogParser(loglistener, chat_command_prefix=config["chat_command_prefix"])
 
@@ -59,13 +57,6 @@ def play(event):
         filename = os.path.join("youtube-dl", video_info["entries"][0]["id"])
 
     play_from_ffmpeg(filename)
-
-
-def get_youtube_video(search_query):
-    query_string = urllib.parse.urlencode({"search_query": search_query})
-    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
-    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-    return "http://www.youtube.com/watch?v=" + search_results[0]
 
 
 def play_from_ffmpeg(file):
