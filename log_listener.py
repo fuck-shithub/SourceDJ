@@ -6,7 +6,7 @@ class LogListener:
         self.log = None
 
     def start(self):
-        logfile = open(self.logfile, "r")
+        logfile = open(self.logfile, "r", encoding="utf8")
         self.log = follow(logfile)
 
 
