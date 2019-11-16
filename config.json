@@ -3,11 +3,13 @@
     "chat_command_prefix": ".",
     "youtube_dl_options": {"format": "bestaudio/best", "outtmpl": "youtube-dl/%(id)s", "default_search": "ytsearch", "noplaylist": true},
     "output_device": 9,
+    "frames_per_buffer": 1024,
     "tts_volume": 1,
     "ydl_volume": 1,
     "loopback": true,
     "loopback_input_device": 2,
     "loopback_output_device": 8,
     "loopback_channels": 2,
-    "loopback_rate": 48000
+    "loopback_rate": 48000,
+    "loopback_frames_per_buffer": 1024
 }

@@ -20,8 +20,8 @@ loglistener = log_listener.LogListener(config["logfile"])
 logparser = log_parser.LogParser(loglistener, chat_command_prefix=config["chat_command_prefix"])
 
 pa = pyaudio.PyAudio()
-tts_audio_queue = audio_queue.AudioQueue(pa, output_device=config["output_device"], volume=config["tts_volume"])
-ydl_audio_queue = audio_queue.AudioQueue(pa, output_device=config["output_device"], volume=config["ydl_volume"])
+tts_audio_queue = audio_queue.AudioQueue(pa, output_device=config["output_device"], frames_per_buffer=config["frames_per_buffer"], volume=config["tts_volume"])
+ydl_audio_queue = audio_queue.AudioQueue(pa, output_device=config["output_device"], frames_per_buffer=config["frames_per_buffer"], volume=config["ydl_volume"])
 
 if config["loopback"]:
     def loopback_callback(in_data, frame_count, time_info, status):
@@ -34,7 +34,8 @@ if config["loopback"]:
                               output=True,
                               stream_callback=loopback_callback,
                               input_device_index=config["loopback_input_device"],
-                              output_device_index=config["loopback_output_device"])
+                              output_device_index=config["loopback_output_device"],
+                              frames_per_buffer=config["loopback_frames_per_buffer"])
 
     loopback_stream.start_stream()
 
