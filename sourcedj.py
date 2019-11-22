@@ -5,9 +5,6 @@ import json
 import gtts
 import pyaudio
 import youtube_dl
-import subprocess
-import soundfile as sf
-import io
 import os
 
 try:
