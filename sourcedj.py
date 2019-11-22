@@ -6,6 +6,7 @@ import gtts
 import pyaudio
 import youtube_dl
 import os
+import traceback
 
 try:
     with open("config.json") as f:
@@ -40,13 +41,21 @@ if config["loopback"]:
 @logparser.chat_command
 def tts(event):
     print(event.author, "->", event.command, event.args)
-    gtts.gTTS(event.args).save("tts.mp3")
-    tts_audio_queue.add_to_queue("tts.mp3")
+
+    try:
+        gtts.gTTS(event.args).save("tts.mp3")
+    except AssertionError:
+        pass
+    except Exception:
+        traceback.print_exc()
+    else:
+        tts_audio_queue.add_to_queue("tts.mp3")
 
 
 @logparser.chat_command
 def play(event):
     print(event.author, "->", event.command, event.args)
+
     ydl = youtube_dl.YoutubeDL(config["youtube_dl_options"])
     with ydl:
         video_info = ydl.extract_info(event.args, download=True)
