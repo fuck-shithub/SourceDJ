@@ -1,5 +1,6 @@
 import time
 
+
 class LogListener:
     def __init__(self, logfile):
         self.logfile = logfile
@@ -11,7 +12,7 @@ class LogListener:
 
 
 def follow(file):
-    file.seek(0,2)
+    file.seek(0, 2)
     while True:
         line = file.readline()
         if not line:

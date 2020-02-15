@@ -25,6 +25,7 @@ if config["loopback"]:
     def loopback_callback(in_data, frame_count, time_info, status):
         return in_data, pyaudio.paContinue
 
+
     loopback_stream = pa.open(format=pa.get_format_from_width(2),
                               channels=config["loopback_channels"],
                               rate=config["loopback_rate"],
